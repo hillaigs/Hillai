@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
   <title>Media — Hillai Govreen</title>
   <meta name="description" content="Videos of Hillai Govreen — clarinetist, saxophonist, and composer based in New York." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -283,7 +284,31 @@
         columns: 1;
       }
     }
-  </style>
+  
+/* ===== MOBILE NAV + LAYOUT FIX (appended) ===== */
+.nav-toggle{display:none;background:none;border:0;cursor:pointer;padding:.45rem;flex-direction:column;gap:5px;margin-left:auto;}
+.nav-toggle span{display:block;width:24px;height:2px;background:var(--text);border-radius:2px;transition:transform .3s ease,opacity .3s ease;}
+.nav-toggle.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+.nav-toggle.open span:nth-child(2){opacity:0;}
+.nav-toggle.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+.nav-toggle:focus-visible{outline:2px solid var(--text);outline-offset:3px;}
+@media (max-width:760px){
+  .header-inner{flex-direction:row !important;flex-wrap:nowrap !important;align-items:center;gap:1rem;padding:.9rem 1.2rem;}
+  .brand{font-size:1.15rem;}
+  .nav-toggle{display:flex !important;}
+  .site-nav{display:none;position:absolute;top:100%;left:0;right:0;background:rgba(255,255,255,0.97);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:.25rem 0;margin:0;box-shadow:0 12px 28px rgba(0,0,0,0.08);}
+  .site-nav.open{display:block;}
+  .site-nav .nav-list{flex-direction:column;gap:0;align-items:stretch;}
+  .site-nav .nav-list li a{display:block;padding:.9rem 1.5rem;font-size:.8rem;letter-spacing:.12em;border-bottom:1px solid var(--border);}
+  .site-nav .nav-list li:last-child a{border-bottom:none;}
+  /* album band: stack so the fixed-width cover never overflows */
+  .album-inner{grid-template-columns:1fr !important;justify-items:center;text-align:center;gap:2rem !important;}
+  .album-cover{width:min(280px,78vw) !important;height:auto !important;aspect-ratio:1/1;}
+  .album-actions{justify-content:center;}
+  /* keep social icons comfortably tappable and wrapped */
+  .social-bar{gap:1.4rem !important;padding:2.25rem 1rem !important;}
+}
+</style>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -291,14 +316,15 @@
   <header class="site-header" role="banner">
     <div class="header-inner">
       <a class="brand" href="index.html" aria-label="Hillai Govreen — Home">Hillai Govreen</a>
+      <button class="nav-toggle" id="nav-toggle" type="button" aria-label="Menu" aria-controls="site-nav" aria-expanded="false"><span></span><span></span><span></span></button>
       <nav class="site-nav" id="site-nav" aria-label="Primary">
         <ul class="nav-list">
-          <li><a href="/about.html">About</a></li>
-          <li><a href="/shows.html">Shows</a></li>
-          <li><a href="/media.html" aria-current="page" style="color: var(--text);">Media</a></li>
-          <li><a href="/press.html">Press</a></li>
-          <li><a href="/epk.html">EPK</a></li>
-          <li><a href="/contact.html">Contact</a></li>
+          <li><a href="/Hillai/about.html">About</a></li>
+          <li><a href="/Hillai/shows.html">Shows</a></li>
+          <li><a href="/Hillai/media.html" aria-current="page" style="color: var(--text);">Media</a></li>
+          <li><a href="/Hillai/press.html">Press</a></li>
+          <li><a href="/Hillai/epk.html">EPK</a></li>
+          <li><a href="/Hillai/contact.html">Contact</a></li>
         </ul>
       </nav>
     </div>
@@ -323,67 +349,37 @@
 
         <div class="video-item">
           <div class="video-wrap">
-            <iframe src="https://www.youtube.com/embed/libD9rbdnIc" title="Hillai Govreen & George Cables — Live at Mezzrow" allowfullscreen loading="lazy"></iframe>
+            <iframe referrerpolicy="strict-origin-when-cross-origin" src="https://www.youtube.com/embed/LbGvaEs-kvg" title="Hillai Govreen" allowfullscreen loading="lazy"></iframe>
           </div>
         </div>
 
         <div class="video-item">
           <div class="video-wrap">
-            <iframe src="https://www.youtube.com/embed/1SEUaqoqdkY" title="The Bridge — Hillai Govreen" allowfullscreen loading="lazy"></iframe>
+            <iframe referrerpolicy="strict-origin-when-cross-origin" src="https://www.youtube.com/embed/1bbNLoaocVA" title="Hillai Govreen" allowfullscreen loading="lazy"></iframe>
           </div>
         </div>
 
         <div class="video-item">
           <div class="video-wrap">
-            <iframe src="https://www.youtube.com/embed/-L5Cbp6qghY" title="George Cables & Hillai Govreen — The 1905" allowfullscreen loading="lazy"></iframe>
+            <iframe referrerpolicy="strict-origin-when-cross-origin" src="https://www.youtube.com/embed/DSVmu7Vi9aY" title="Hillai Govreen" allowfullscreen loading="lazy"></iframe>
           </div>
         </div>
 
         <div class="video-item">
           <div class="video-wrap">
-            <iframe src="https://www.youtube.com/embed/FqZxc6a8XdY" title="Musical Allusions — Jazziz" allowfullscreen loading="lazy"></iframe>
+            <iframe referrerpolicy="strict-origin-when-cross-origin" src="https://www.youtube.com/embed/Ix42eBmL7Wo" title="Hillai Govreen" allowfullscreen loading="lazy"></iframe>
           </div>
         </div>
 
         <div class="video-item">
           <div class="video-wrap">
-            <iframe src="https://www.youtube.com/embed/Rpq8f0b2PG4" title="Hillai Govreen — Passing Through" allowfullscreen loading="lazy"></iframe>
+            <iframe referrerpolicy="strict-origin-when-cross-origin" src="https://www.youtube.com/embed/jyz4avdm4wY" title="Hillai Govreen" allowfullscreen loading="lazy"></iframe>
           </div>
         </div>
 
         <div class="video-item">
           <div class="video-wrap">
-            <iframe src="https://www.youtube.com/embed/fZgmweZ-xVc" title="Hillai Govreen — The Jazz Gallery" allowfullscreen loading="lazy"></iframe>
-          </div>
-        </div>
-
-        <div class="video-item">
-          <div class="video-wrap">
-            <iframe src="https://www.youtube.com/embed/7V6PR9EOQNI" title="Hillai Govreen — Every Other Now" allowfullscreen loading="lazy"></iframe>
-          </div>
-        </div>
-
-        <div class="video-item">
-          <div class="video-wrap">
-            <iframe src="https://www.youtube.com/embed/LbGvaEs-kvg" title="Hillai Govreen" allowfullscreen loading="lazy"></iframe>
-          </div>
-        </div>
-
-        <div class="video-item">
-          <div class="video-wrap">
-            <iframe src="https://www.youtube.com/embed/Ix42eBmL7Wo" title="Hillai Govreen" allowfullscreen loading="lazy"></iframe>
-          </div>
-        </div>
-
-        <div class="video-item">
-          <div class="video-wrap">
-            <iframe src="https://www.youtube.com/embed/jyz4avdm4wY" title="Hillai Govreen" allowfullscreen loading="lazy"></iframe>
-          </div>
-        </div>
-
-        <div class="video-item">
-          <div class="video-wrap">
-            <iframe src="https://www.youtube.com/embed/1bbNLoaocVA" title="Hillai Govreen" allowfullscreen loading="lazy"></iframe>
+            <iframe referrerpolicy="strict-origin-when-cross-origin" src="https://www.youtube.com/embed/-R-HyJT4a14" title="Hillai Govreen" allowfullscreen loading="lazy"></iframe>
           </div>
         </div>
 
@@ -435,6 +431,7 @@
       toggle.addEventListener('click', () => {
         toggle.classList.toggle('open');
         nav.classList.toggle('open');
+        toggle.setAttribute('aria-expanded', nav.classList.contains('open'));
       });
       // Close nav when a link is clicked
       nav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
