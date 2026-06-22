@@ -172,6 +172,12 @@
     border:1px solid var(--rule); border-radius:6px;
     padding:10px 14px; margin-bottom:20px;
   }
+  .hg-section-label{
+    font-family: var(--font-body);
+    font-size: .78rem; letter-spacing: .14em; text-transform: uppercase;
+    color: var(--muted); font-weight: 600;
+    margin: 44px 0 4px;
+  }
   .hg-foot{ margin-top:32px; color:var(--muted); font-size:.9rem; }
   .hg-foot a{ color: var(--accent); }
 
@@ -209,10 +215,6 @@
   <div class="hg-wrap">
     <div class="hg-head">
       <h1 class="hg-title">Shows</h1>
-      <div class="hg-toggle" role="group" aria-label="Show upcoming or past dates">
-        <button id="tab-upcoming" aria-pressed="true">Upcoming</button>
-        <button id="tab-past" aria-pressed="false">Past</button>
-      </div>
     </div>
 
     <div id="hg-content" aria-live="polite">
@@ -237,9 +239,6 @@
   };
 
   var content = document.getElementById("hg-content");
-  var tabUpcoming = document.getElementById("tab-upcoming");
-  var tabPast = document.getElementById("tab-past");
-  var cache = {}; // { upcoming: [...], past: [...] }
 
   // ---- helpers ------------------------------------------------
   function apiUrl(opts) {
@@ -410,7 +409,14 @@
     return li;
   }
 
-  function renderList(events, mode, note) {
+  function addEvents(events, mode) {
+    var ul = document.createElement("ul");
+    ul.className = "hg-list";
+    events.forEach(function (ev) { ul.appendChild(renderEvent(ev, mode)); });
+    content.appendChild(ul);
+  }
+
+  function render(upcoming, past, note) {
     content.innerHTML = "";
     if (note) {
       var n = document.createElement("p");
@@ -418,47 +424,56 @@
       n.textContent = note;
       content.appendChild(n);
     }
-    if (!events.length) {
+
+    if (!upcoming.length && !past.length) {
       var p = document.createElement("p");
       p.className = "hg-state";
-      p.innerHTML = mode === "past"
-        ? "No past dates to show yet."
-        : 'No upcoming shows right now — check back soon, or <a href="https://www.hillaigovreen.com/contact">get in touch</a> about booking.';
+      p.innerHTML = 'No shows to show right now — check back soon, or <a href="https://www.hillaigovreen.com/contact">get in touch</a> about booking.';
       content.appendChild(p);
       return;
     }
-    var ul = document.createElement("ul");
-    ul.className = "hg-list";
-    events.forEach(function (ev) { ul.appendChild(renderEvent(ev, mode)); });
-    content.appendChild(ul);
+
+    if (upcoming.length) {
+      addEvents(upcoming, "upcoming");
+    } else {
+      var pu = document.createElement("p");
+      pu.className = "hg-state";
+      pu.innerHTML = 'No upcoming shows right now — check back soon, or <a href="https://www.hillaigovreen.com/contact">get in touch</a> about booking.';
+      content.appendChild(pu);
+    }
+
+    if (past.length) {
+      var label = document.createElement("h2");
+      label.className = "hg-section-label";
+      label.textContent = "Past shows";
+      content.appendChild(label);
+      addEvents(past, "past");
+    }
   }
 
   // ---- data ---------------------------------------------------
-  function load(mode) {
-    if (cache[mode]) { renderList(cache[mode].events, mode, cache[mode].note); return; }
+  function okJson(r) { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); }
+
+  function load() {
     content.innerHTML = '<p class="hg-state">Loading dates…</p>';
-
     var now = new Date();
-    var opts = mode === "past"
-      ? { timeMax: now.toISOString(),
-          timeMin: new Date(now.getFullYear(), now.getMonth() - CONFIG.pastWindowMonths, 1).toISOString() }
-      : { timeMin: now.toISOString() };
+    var upcomingUrl = apiUrl({ timeMin: now.toISOString() });
+    var pastUrl = apiUrl({
+      timeMax: now.toISOString(),
+      timeMin: new Date(now.getFullYear(), now.getMonth() - CONFIG.pastWindowMonths, 1).toISOString()
+    });
 
-    fetch(apiUrl(opts))
-      .then(function (r) { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
-      .then(function (data) {
-        var items = data.items || [];
-        if (mode === "past") items.reverse(); // most recent first
-        cache[mode] = { events: items, note: null };
-        renderList(items, mode, null);
+    Promise.all([fetch(upcomingUrl).then(okJson), fetch(pastUrl).then(okJson)])
+      .then(function (res) {
+        var upcoming = res[0].items || [];
+        var past = (res[1].items || []).reverse(); // most recent first
+        render(upcoming, past, null);
       })
       .catch(function (err) {
         // Likely a referrer block (e.g. previewing off-domain) — show sample data
         // so the layout is visible. On hillaigovreen.com this path won't run.
-        var demo = demoEvents(mode);
         var note = "Showing sample dates — your live calendar loads when this page is on hillaigovreen.com.";
-        cache[mode] = { events: demo, note: note };
-        renderList(demo, mode, note);
+        render(demoEvents("upcoming"), demoEvents("past"), note);
         console.warn("Calendar fetch failed, using sample data:", err.message);
       });
   }
@@ -492,18 +507,8 @@
     ];
   }
 
-  // ---- tabs ---------------------------------------------------
-  function setTab(mode) {
-    var up = mode === "upcoming";
-    tabUpcoming.setAttribute("aria-pressed", String(up));
-    tabPast.setAttribute("aria-pressed", String(!up));
-    load(mode);
-  }
-  tabUpcoming.addEventListener("click", function () { setTab("upcoming"); });
-  tabPast.addEventListener("click", function () { setTab("past"); });
-
   // init
-  load("upcoming");
+  load();
 })();
 </script>
 
