@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yoga Classes · Reserve your mat</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* ============================================================
+     PALETTE — dawn / cool sage. One accent (indigo) carries
+     everything interactive; sky is reserved for the breath.
+     ============================================================ */
+  :root{
+    --paper:   #EDF0EB;
+    --paper-2: #E4E9E2;
+    --ink:     #1B2620;
+    --muted:   #5C685F;
+    --indigo:  #34466B;
+    --indigo-deep:#283958;
+    --sky:     #9BB1C9;
+    --line:    #CBD3C9;
+    --paper-card:#F4F6F1;
+
+    --display: "Fraunces", Georgia, "Times New Roman", serif;
+    --body:    "Hanken Grotesk", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+
+    --maxw: 1080px;
+  }
+
+  *{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--body);
+    font-size:17px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{ color:inherit; }
+  .wrap{ width:100%; max-width:var(--maxw); margin:0 auto; padding:0 28px; }
+
+  .eyebrow{
+    font-size:.74rem; letter-spacing:.22em; text-transform:uppercase;
+    font-weight:600; color:var(--muted);
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    min-height:88vh; display:grid; grid-template-columns:1.15fr .85fr;
+    align-items:center; gap:40px; padding:64px 0 48px;
+  }
+  .hero-copy h1{
+    font-family:var(--display);
+    font-weight:500;
+    font-size:clamp(2.7rem, 6vw, 4.6rem);
+    line-height:1.02;
+    letter-spacing:-.015em;
+    margin:.5rem 0 1.1rem;
+  }
+  .hero-copy h1 em{ font-style:italic; color:var(--indigo); }
+  .hero-copy p.lede{
+    font-size:1.15rem; color:var(--muted); max-width:42ch; margin:0 0 2rem;
+  }
+  .hero-actions{ display:flex; gap:14px; flex-wrap:wrap; }
+
+  .btn{
+    font-family:var(--body); font-weight:600; font-size:.97rem;
+    padding:.85em 1.5em; border-radius:999px; border:1px solid var(--ink);
+    background:var(--ink); color:var(--paper); cursor:pointer;
+    text-decoration:none; display:inline-flex; align-items:center; gap:.5em;
+    transition:transform .18s ease, background .18s ease, color .18s ease;
+  }
+  .btn:hover{ transform:translateY(-2px); background:var(--indigo); border-color:var(--indigo); }
+  .btn.ghost{ background:transparent; color:var(--ink); }
+  .btn.ghost:hover{ background:transparent; color:var(--indigo); border-color:var(--indigo); transform:translateY(-2px); }
+
+  /* ---------- BREATH (signature) ---------- */
+  .breath{
+    position:relative; aspect-ratio:1; width:100%; max-width:360px;
+    margin-inline:auto; display:grid; place-items:center;
+  }
+  .breath-ring{
+    position:absolute; inset:0; border-radius:50%;
+    border:1px solid var(--line);
+  }
+  .breath-circle{
+    width:62%; height:62%; border-radius:50%;
+    background:radial-gradient(circle at 50% 42%, #C7D6E4 0%, var(--sky) 55%, var(--indigo) 130%);
+    box-shadow:0 24px 60px -24px rgba(52,70,107,.55);
+    animation:breathe 8s ease-in-out infinite;
+  }
+  .breath-label{
+    position:absolute; bottom:-2.4rem; left:0; right:0; text-align:center;
+    font-size:.74rem; letter-spacing:.24em; text-transform:uppercase; color:var(--muted);
+  }
+  .breath-label .in,.breath-label .out{
+    position:absolute; left:0; right:0; transition:opacity .6s ease;
+  }
+  .breath-label .in{ animation:fadeIn 8s ease-in-out infinite; }
+  .breath-label .out{ animation:fadeOut 8s ease-in-out infinite; }
+
+  @keyframes breathe{
+    0%   { transform:scale(.72); }
+    50%  { transform:scale(1);   }
+    100% { transform:scale(.72); }
+  }
+  @keyframes fadeIn{  0%,45%{opacity:1} 55%,100%{opacity:0} }
+  @keyframes fadeOut{ 0%,45%{opacity:0} 55%,100%{opacity:1} }
+
+  @media (prefers-reduced-motion: reduce){
+    .breath-circle{ animation:none; transform:scale(.9); }
+    .breath-label .in{ animation:none; opacity:1; }
+    .breath-label .out{ animation:none; opacity:0; }
+    html{ scroll-behavior:auto; }
+  }
+
+  /* ---------- SECTIONS ---------- */
+  section.block{ padding:72px 0; border-top:1px solid var(--line); }
+  .section-head{ display:flex; align-items:baseline; justify-content:space-between; gap:20px; margin-bottom:2.4rem; flex-wrap:wrap; }
+  .section-head h2{
+    font-family:var(--display); font-weight:500; font-size:clamp(1.9rem,3.6vw,2.7rem);
+    letter-spacing:-.01em; margin:.3rem 0 0;
+  }
+
+  /* ---------- CLASS AGENDA ---------- */
+  .agenda{ display:flex; flex-direction:column; }
+  .class-row{
+    display:grid; grid-template-columns:96px 1fr auto; gap:26px; align-items:center;
+    padding:24px 0; border-top:1px solid var(--line);
+  }
+  .class-row:last-child{ border-bottom:1px solid var(--line); }
+  .date-chip{ text-align:center; line-height:1; }
+  .date-chip .day{ font-family:var(--display); font-weight:500; font-size:2.5rem; color:var(--ink); }
+  .date-chip .mon{ font-size:.72rem; letter-spacing:.18em; text-transform:uppercase; color:var(--muted); margin-top:.45rem; }
+  .date-chip .wd{ font-size:.72rem; color:var(--muted); margin-top:.2rem; }
+  .class-meta .name{ font-family:var(--display); font-weight:500; font-size:1.4rem; line-height:1.2; }
+  .class-meta .det{ color:var(--muted); font-size:.96rem; margin-top:.35rem; display:flex; gap:1.1rem; flex-wrap:wrap; }
+  .class-meta .desc{ color:var(--muted); font-size:.94rem; margin-top:.5rem; max-width:60ch; }
+  .reserve-btn{
+    font-family:var(--body); font-weight:600; font-size:.9rem;
+    padding:.6em 1.2em; border-radius:999px; border:1px solid var(--indigo);
+    background:transparent; color:var(--indigo); cursor:pointer; white-space:nowrap;
+    transition:background .18s ease, color .18s ease;
+  }
+  .reserve-btn:hover{ background:var(--indigo); color:var(--paper); }
+
+  .agenda-state{ color:var(--muted); padding:28px 0; border-top:1px solid var(--line); }
+  .agenda-state strong{ color:var(--ink); font-weight:600; }
+  .notice{
+    margin-top:1.2rem; font-size:.86rem; color:var(--muted);
+    background:var(--paper-2); border:1px dashed var(--line); border-radius:12px; padding:14px 16px;
+  }
+  .notice code{ background:rgba(27,38,32,.07); padding:.1em .4em; border-radius:4px; font-size:.92em; }
+
+  /* ---------- RSVP FORM ---------- */
+  .rsvp-grid{ display:grid; grid-template-columns:.9fr 1.1fr; gap:48px; align-items:start; }
+  .rsvp-intro p{ color:var(--muted); max-width:40ch; }
+  .field{ margin-bottom:1.15rem; }
+  .field label{ display:block; font-size:.8rem; letter-spacing:.06em; text-transform:uppercase; font-weight:600; color:var(--muted); margin-bottom:.45rem; }
+  .field input, .field select, .field textarea{
+    width:100%; font-family:var(--body); font-size:1rem; color:var(--ink);
+    background:var(--paper-card); border:1px solid var(--line); border-radius:12px;
+    padding:.8em .9em; transition:border-color .15s ease, box-shadow .15s ease;
+  }
+  .field textarea{ resize:vertical; min-height:90px; }
+  .field input:focus, .field select:focus, .field textarea:focus{
+    outline:none; border-color:var(--indigo); box-shadow:0 0 0 3px rgba(52,70,107,.16);
+  }
+  .row-2{ display:grid; grid-template-columns:1fr 130px; gap:18px; }
+  .form-msg{ margin-top:1rem; font-size:.95rem; min-height:1.2em; }
+  .form-msg.ok{ color:var(--indigo); font-weight:600; }
+  .form-msg.err{ color:#9a3b3b; font-weight:600; }
+
+  :focus-visible{ outline:2px solid var(--indigo); outline-offset:2px; }
+
+  /* ---------- FOOTER ---------- */
+  footer{ padding:48px 0 64px; border-top:1px solid var(--line); color:var(--muted); font-size:.9rem; }
+  footer .wrap{ display:flex; justify-content:space-between; gap:18px; flex-wrap:wrap; }
+  footer a{ text-decoration:none; }
+  footer a:hover{ color:var(--indigo); }
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width:860px){
+    .hero{ grid-template-columns:1fr; min-height:auto; padding:48px 0 32px; gap:36px; }
+    .breath{ order:-1; max-width:240px; }
+    .rsvp-grid{ grid-template-columns:1fr; gap:28px; }
+    .class-row{ grid-template-columns:64px 1fr; row-gap:14px; }
+    .reserve-btn{ grid-column:1 / -1; justify-self:start; }
+    .date-chip .day{ font-size:2rem; }
+  }
+</style>
+</head>
+<body>
+
+  <header class="hero wrap">
+    <div class="hero-copy">
+      <span class="eyebrow">Weekly practice · hillaigovreen.com</span>
+      <h1>Move slow.<br><em>Breathe</em> deep.</h1>
+      <p class="lede">Weekly yoga with Hillai — open to every body. See what's coming up and reserve your mat below.</p>
+      <div class="hero-actions">
+        <a href="#classes" class="btn">See upcoming classes</a>
+        <a href="#rsvp" class="btn ghost">Reserve your mat</a>
+      </div>
+    </div>
+    <div class="breath" aria-hidden="true">
+      <div class="breath-ring"></div>
+      <div class="breath-circle"></div>
+      <div class="breath-label">
+        <span class="in">Inhale</span>
+        <span class="out">Exhale</span>
+      </div>
+    </div>
+  </header>
+
+  <section class="block" id="classes">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <span class="eyebrow">On the schedule</span>
+          <h2>Upcoming classes</h2>
+        </div>
+      </div>
+      <div class="agenda" id="agenda">
+        <div class="agenda-state">Loading the schedule…</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="rsvp">
+    <div class="wrap">
+      <div class="rsvp-grid">
+        <div class="rsvp-intro">
+          <span class="eyebrow">Save your spot</span>
+          <h2 style="font-family:var(--display);font-weight:500;font-size:clamp(1.9rem,3.6vw,2.7rem);letter-spacing:-.01em;margin:.3rem 0 1rem;">Reserve your mat</h2>
+          <p>Pick a class, leave your details, and you're on the list. Space is limited, so reserving ahead helps me set out the right number of mats.</p>
+        </div>
+
+        <form id="rsvp-form" novalidate>
+          <div class="field">
+            <label for="f-name">Your name</label>
+            <input id="f-name" name="name" type="text" autocomplete="name" required>
+          </div>
+          <div class="field">
+            <label for="f-email">Email</label>
+            <input id="f-email" name="email" type="email" autocomplete="email" required>
+          </div>
+          <div class="field">
+            <label for="f-class">Class</label>
+            <select id="f-class" name="class" required>
+              <option value="" disabled selected>Choose a class…</option>
+            </select>
+          </div>
+          <div class="row-2">
+            <div class="field" style="margin-bottom:0;">
+              <label for="f-note">Anything to share <span style="text-transform:none;letter-spacing:0;font-weight:400;">(optional)</span></label>
+              <input id="f-note" name="note" type="text" placeholder="First time, an injury to note…">
+            </div>
+            <div class="field" style="margin-bottom:0;">
+              <label for="f-count">How many?</label>
+              <input id="f-count" name="count" type="number" min="1" max="8" value="1" inputmode="numeric">
+            </div>
+          </div>
+          <div style="margin-top:1.6rem;">
+            <button type="submit" class="btn" id="submit-btn">Reserve my mat</button>
+          </div>
+          <p class="form-msg" id="form-msg" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap">
+      <span>Hillai Govreen · Yoga</span>
+      <span><a href="https://hillaigovreen.com">hillaigovreen.com</a></span>
+    </div>
+  </footer>
+
+<script>
+/* ================================================================
+   CONFIG  —  edit these four lines, then upload to your site.
+   ================================================================ */
+const CONFIG = {
+  // Your Google Calendar ID (the one you gave me):
+  CALENDAR_ID: "hillai8897@gmail.com",
+
+  // Get a key at console.cloud.google.com → enable "Google Calendar API"
+  // → Credentials → API key. Then make this calendar PUBLIC in its
+  // settings ("Make available to public"). Paste the key here:
+  API_KEY: "YOUR_GOOGLE_CALENDAR_API_KEY",
+
+  // Where RSVPs go. Easiest: make a free form at formspree.io and paste
+  // its endpoint here (looks like https://formspree.io/f/abcdwxyz).
+  // Leave blank to fall back to an email draft to NOTIFY_EMAIL instead.
+  FORMSPREE_ENDPOINT: "",
+
+  // Used only for the email fallback when FORMSPREE_ENDPOINT is blank:
+  NOTIFY_EMAIL: "hillai8897@gmail.com",
+
+  MAX_RESULTS: 8
+};
+/* ================================================================ */
+
+const agendaEl = document.getElementById("agenda");
+const selectEl = document.getElementById("f-class");
+let loadedEvents = [];
+
+/* ---- date helpers ---- */
+function parseStart(ev){
+  // timed events use start.dateTime; all-day use start.date
+  const raw = ev.start.dateTime || ev.start.date;
+  return { date:new Date(raw), allDay:!ev.start.dateTime };
+}
+function fmtTime(start, ev){
+  if (start.allDay) return "All day";
+  const opts = { hour:"numeric", minute:"2-digit" };
+  const s = start.date.toLocaleTimeString([], opts);
+  if (ev.end && ev.end.dateTime){
+    const e = new Date(ev.end.dateTime).toLocaleTimeString([], opts);
+    return s + " – " + e;
+  }
+  return s;
+}
+
+/* ---- render the agenda ---- */
+function renderEvents(events, { sample=false }={}){
+  loadedEvents = events;
+  if (!events.length){
+    agendaEl.innerHTML = '<div class="agenda-state">No classes are on the schedule right now. ' +
+      'Check back soon, or <a href="#rsvp" style="color:var(--indigo)">reach out</a> about the next session.</div>';
+    return;
+  }
+  agendaEl.innerHTML = "";
+  events.forEach((ev, i) => {
+    const start = parseStart(ev);
+    const row = document.createElement("div");
+    row.className = "class-row";
+    const day = start.date.getDate();
+    const mon = start.date.toLocaleString([], { month:"short" });
+    const wd  = start.date.toLocaleString([], { weekday:"short" });
+    const loc = ev.location ? `<span>${escapeHtml(ev.location)}</span>` : "";
+    const desc= ev.description ? `<div class="desc">${escapeHtml(stripTags(ev.description)).slice(0,180)}</div>` : "";
+    row.innerHTML = `
+      <div class="date-chip">
+        <div class="day">${day}</div>
+        <div class="mon">${mon}</div>
+        <div class="wd">${wd}</div>
+      </div>
+      <div class="class-meta">
+        <div class="name">${escapeHtml(ev.summary || "Yoga class")}</div>
+        <div class="det"><span>${fmtTime(start, ev)}</span>${loc}</div>
+        ${desc}
+      </div>
+      <button class="reserve-btn" data-i="${i}">Reserve</button>`;
+    agendaEl.appendChild(row);
+  });
+
+  // populate RSVP dropdown
+  selectEl.innerHTML = '<option value="" disabled selected>Choose a class…</option>';
+  events.forEach((ev, i) => {
+    const start = parseStart(ev);
+    const label = `${(ev.summary||"Yoga class")} — ${start.date.toLocaleDateString([], {weekday:"short", month:"short", day:"numeric"})}`;
+    const opt = document.createElement("option");
+    opt.value = label; opt.dataset.i = i; opt.textContent = label;
+    selectEl.appendChild(opt);
+  });
+
+  // wire reserve buttons
+  agendaEl.querySelectorAll(".reserve-btn").forEach(b => {
+    b.addEventListener("click", () => {
+      const i = b.dataset.i;
+      selectEl.selectedIndex = Number(i) + 1; // +1 for placeholder
+      document.getElementById("rsvp").scrollIntoView({ behavior:"smooth" });
+      document.getElementById("f-name").focus({ preventScroll:true });
+    });
+  });
+
+  if (sample){
+    const note = document.createElement("div");
+    note.className = "notice";
+    note.innerHTML = "Showing example classes. Add your <code>API_KEY</code> in the config and make the calendar public to pull your real schedule.";
+    agendaEl.appendChild(note);
+  }
+}
+
+function escapeHtml(s){ return (s||"").replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function stripTags(s){ return (s||"").replace(/<[^>]*>/g," "); }
+
+/* ---- sample fallback so the layout is visible before setup ---- */
+function sampleEvents(){
+  const mk = (days, h, m, name, loc, dur=75) => {
+    const d = new Date(); d.setDate(d.getDate()+days); d.setHours(h,m,0,0);
+    const e = new Date(d.getTime()+dur*60000);
+    return { summary:name, location:loc, start:{dateTime:d.toISOString()}, end:{dateTime:e.toISOString()} };
+  };
+  return [
+    mk(2, 8, 30, "Morning Flow", "Studio, hillaigovreen.com"),
+    mk(4, 18, 0, "Slow & Restore", "Studio"),
+    mk(7, 9, 0, "Vinyasa", "Studio"),
+  ];
+}
+
+/* ---- load from Google Calendar ---- */
+async function loadCalendar(){
+  if (!CONFIG.API_KEY || CONFIG.API_KEY === "YOUR_GOOGLE_CALENDAR_API_KEY"){
+    renderEvents(sampleEvents(), { sample:true });
+    return;
+  }
+  const url = "https://www.googleapis.com/calendar/v3/calendars/"
+    + encodeURIComponent(CONFIG.CALENDAR_ID)
+    + "/events?key=" + CONFIG.API_KEY
+    + "&timeMin=" + new Date().toISOString()
+    + "&singleEvents=true&orderBy=startTime&maxResults=" + CONFIG.MAX_RESULTS;
+  try{
+    const res = await fetch(url);
+    if (!res.ok) throw new Error("HTTP " + res.status);
+    const data = await res.json();
+    renderEvents((data.items || []).filter(e => e.start));
+  }catch(err){
+    agendaEl.innerHTML = '<div class="agenda-state"><strong>Couldn\'t load the schedule.</strong> ' +
+      'Check that the calendar is public and the API key is valid.</div>' +
+      '<div class="notice">Showing example classes meanwhile.</div>';
+    renderEvents(sampleEvents(), { sample:false });
+  }
+}
+
+/* ---- RSVP submit ---- */
+const form = document.getElementById("rsvp-form");
+const msg  = document.getElementById("form-msg");
+const submitBtn = document.getElementById("submit-btn");
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  msg.className = "form-msg"; msg.textContent = "";
+
+  const data = {
+    name:  form.name.value.trim(),
+    email: form.email.value.trim(),
+    class: form.class.value,
+    count: form.count.value,
+    note:  form.note.value.trim()
+  };
+  if (!data.name || !data.email || !data.class){
+    msg.className = "form-msg err";
+    msg.textContent = "Please add your name, email, and a class.";
+    return;
+  }
+
+  // No Formspree set up → build an email draft instead.
+  if (!CONFIG.FORMSPREE_ENDPOINT){
+    const subject = encodeURIComponent("Yoga RSVP — " + data.name);
+    const body = encodeURIComponent(
+      `Name: ${data.name}\nEmail: ${data.email}\nClass: ${data.class}\nHow many: ${data.count}\nNote: ${data.note || "—"}`
+    );
+    window.location.href = `mailto:${CONFIG.NOTIFY_EMAIL}?subject=${subject}&body=${body}`;
+    msg.className = "form-msg ok";
+    msg.textContent = "Opening an email to finish your reservation…";
+    return;
+  }
+
+  submitBtn.disabled = true; submitBtn.textContent = "Reserving…";
+  try{
+    const res = await fetch(CONFIG.FORMSPREE_ENDPOINT, {
+      method:"POST",
+      headers:{ "Accept":"application/json", "Content-Type":"application/json" },
+      body:JSON.stringify(data)
+    });
+    if (!res.ok) throw new Error("HTTP " + res.status);
+    form.reset();
+    msg.className = "form-msg ok";
+    msg.textContent = "Reserved. See you on the mat.";
+  }catch(err){
+    msg.className = "form-msg err";
+    msg.textContent = "That didn't go through. Try again, or email me to reserve.";
+  }finally{
+    submitBtn.disabled = false; submitBtn.textContent = "Reserve my mat";
+  }
+});
+
+loadCalendar();
+</script>
+</body>
+</html>
