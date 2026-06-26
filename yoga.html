@@ -254,15 +254,17 @@
               <option value="" disabled selected>Choose a class…</option>
             </select>
           </div>
-          <div class="row-2">
-            <div class="field" style="margin-bottom:0;">
-              <label for="f-note">Anything to share <span style="text-transform:none;letter-spacing:0;font-weight:400;">(optional)</span></label>
-              <input id="f-note" name="note" type="text" placeholder="First time, an injury to note…">
-            </div>
-            <div class="field" style="margin-bottom:0;">
-              <label for="f-count">How many?</label>
-              <input id="f-count" name="count" type="number" min="1" max="8" value="1" inputmode="numeric">
-            </div>
+          <div class="field">
+            <label for="f-injuries">Do you have any injuries I should know about? <span style="text-transform:none;letter-spacing:0;font-weight:400;">(optional)</span></label>
+            <input id="f-injuries" name="injuries" type="text" placeholder="A sore shoulder, a recent surgery…">
+          </div>
+          <div class="field">
+            <label for="f-mat">Do you need a mat?</label>
+            <select id="f-mat" name="mat">
+              <option value="" selected>No preference</option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+            </select>
           </div>
           <div style="margin-top:1.6rem;">
             <button type="submit" class="btn" id="submit-btn">Reserve my mat</button>
@@ -292,13 +294,17 @@ const CONFIG = {
   // The calendar above must be PUBLIC for this key to read it.
   API_KEY: "AIzaSyBsarOpzxxi8CJmRXjLZc56sX0tB7jgO9U",
 
-  // Where RSVPs go. Easiest: make a free form at formspree.io and paste
-  // its endpoint here (looks like https://formspree.io/f/abcdwxyz).
-  // Leave blank to fall back to an email draft to NOTIFY_EMAIL instead.
-  FORMSPREE_ENDPOINT: "",
-
-  // Used only for the email fallback when FORMSPREE_ENDPOINT is blank:
-  NOTIFY_EMAIL: "hillai8897@gmail.com",
+  // RSVPs post into your "Yoga with Hillai RSVP" Google Form, which feeds
+  // its linked Google Sheet. To change the form, swap the action URL and
+  // the entry IDs below (get them via the form's "Get pre-filled link").
+  GOOGLE_FORM_ACTION: "https://docs.google.com/forms/d/e/1FAIpQLSfnLlSQQLOOtPfRDw-hX_azeuygXhiIzOgKSpfXvydyur9qKQ/formResponse",
+  FORM_ENTRIES: {
+    name:     "entry.1498135098",
+    email:    "entry.1922240229",
+    class:    "entry.309943260",
+    injuries: "entry.2606285",
+    mat:      "entry.1623105728"   // value must be exactly "Yes" or "No"
+  },
 
   MAX_RESULTS: 8
 };
@@ -437,11 +443,11 @@ form.addEventListener("submit", async (e) => {
   msg.className = "form-msg"; msg.textContent = "";
 
   const data = {
-    name:  form.name.value.trim(),
-    email: form.email.value.trim(),
-    class: form.class.value,
-    count: form.count.value,
-    note:  form.note.value.trim()
+    name:     form.name.value.trim(),
+    email:    form.email.value.trim(),
+    class:    form.class.value,
+    injuries: form.injuries.value.trim(),
+    mat:      form.mat.value
   };
   if (!data.name || !data.email || !data.class){
     msg.className = "form-msg err";
@@ -449,32 +455,30 @@ form.addEventListener("submit", async (e) => {
     return;
   }
 
-  // No Formspree set up → build an email draft instead.
-  if (!CONFIG.FORMSPREE_ENDPOINT){
-    const subject = encodeURIComponent("Yoga RSVP — " + data.name);
-    const body = encodeURIComponent(
-      `Name: ${data.name}\nEmail: ${data.email}\nClass: ${data.class}\nHow many: ${data.count}\nNote: ${data.note || "—"}`
-    );
-    window.location.href = `mailto:${CONFIG.NOTIFY_EMAIL}?subject=${subject}&body=${body}`;
-    msg.className = "form-msg ok";
-    msg.textContent = "Opening an email to finish your reservation…";
-    return;
-  }
+  // Build the Google Form payload from the entry IDs.
+  const params = new URLSearchParams();
+  params.append(CONFIG.FORM_ENTRIES.name,  data.name);
+  params.append(CONFIG.FORM_ENTRIES.email, data.email);
+  params.append(CONFIG.FORM_ENTRIES.class, data.class);
+  if (data.injuries) params.append(CONFIG.FORM_ENTRIES.injuries, data.injuries);
+  if (data.mat)      params.append(CONFIG.FORM_ENTRIES.mat, data.mat);
 
   submitBtn.disabled = true; submitBtn.textContent = "Reserving…";
   try{
-    const res = await fetch(CONFIG.FORMSPREE_ENDPOINT, {
-      method:"POST",
-      headers:{ "Accept":"application/json", "Content-Type":"application/json" },
-      body:JSON.stringify(data)
+    // Google Forms doesn't allow cross-origin reads, so this is a
+    // fire-and-forget post: the response is opaque, but the row still
+    // lands in your Sheet. We confirm optimistically.
+    await fetch(CONFIG.GOOGLE_FORM_ACTION, {
+      method: "POST",
+      mode: "no-cors",
+      body: params
     });
-    if (!res.ok) throw new Error("HTTP " + res.status);
     form.reset();
     msg.className = "form-msg ok";
     msg.textContent = "Reserved. See you on the mat.";
   }catch(err){
     msg.className = "form-msg err";
-    msg.textContent = "That didn't go through. Try again, or email me to reserve.";
+    msg.textContent = "That didn't go through — check your connection and try again.";
   }finally{
     submitBtn.disabled = false; submitBtn.textContent = "Reserve my mat";
   }
