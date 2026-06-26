@@ -6,7 +6,7 @@
 <!-- Fonts: swap these (or set the --font-* vars to "inherit") to match your Squarespace fonts exactly -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
 
 <style>
   /* ============================================================
@@ -15,22 +15,23 @@
      --font-display / --font-body to inherit.
      ============================================================ */
   .hg-shows{
-    --bg:        #FBFAF7;   /* page/section background        */
-    --fg:        #1B1A17;   /* primary text (ink)             */
-    --muted:     #6E6A60;   /* secondary text (dates, lineup) */
-    --accent:    #9A7B3F;   /* brass — a nod to the keys of a sax/clarinet */
-    --accent-2:  #7C6230;   /* darker brass for hover         */
-    --rule:      #E4E0D6;   /* hairline dividers              */
-    --font-display: "Fraunces", Georgia, "Times New Roman", serif;
-    --font-body:    "Inter", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-    --maxw: 720px;
+    --bg:        #ffffff;   /* page/section background        */
+    --fg:        #111111;   /* primary text (ink)             */
+    --muted:     #5a5a5a;   /* secondary text (dates, lineup) */
+    --accent:    #5a5a5a;   /* matches site (no brass accent) */
+    --accent-2:  #111111;   /* hover                          */
+    --rule:      rgba(0,0,0,0.12); /* hairline dividers        */
+    --font-display: "Cormorant Garamond", Georgia, serif;
+    --font-body:    "Jost", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    --maxw: 1120px;
   }
 
   .hg-shows{
     background: var(--bg);
     color: var(--fg);
     font-family: var(--font-body);
-    line-height: 1.5;
+    font-weight: 300;
+    line-height: 1.6;
     -webkit-font-smoothing: antialiased;
     padding: 0 clamp(16px, 5vw, 32px) clamp(24px, 5vw, 64px);
   }
@@ -216,7 +217,6 @@
         <span></span><span></span><span></span>
       </button>
       <nav class="hg-menu" id="hg-menu" aria-label="Primary">
-        <a href="https://www.hillaigovreen.com/">Home</a>
         <a href="https://www.hillaigovreen.com/about">About</a>
         <a href="https://www.hillaigovreen.com/shows" aria-current="page">Shows</a>
         <a href="https://www.hillaigovreen.com/media">Media</a>
@@ -247,7 +247,7 @@
   // ============================================================
   var CONFIG = {
     apiKey: "AIzaSyBsarOpzxxi8CJmRXjLZc56sX0tB7jgO9U",
-    calendarId: "300a0735963948487907a94a78baf42794fd9a7415ba75019b436ddcc5ab9ff2@group.calendar.google.com",
+    calendarId: "c_4e82e30f9d57bbff813400f6504f09f0267566808b0148204f57cd135b1b3d4e@group.calendar.google.com",
     maxResults: 50,
     pastWindowMonths: 24 // how far back "Past" looks
   };
