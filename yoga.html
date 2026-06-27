@@ -65,7 +65,8 @@
   .hero-copy p.lede{
     font-size:1.15rem; color:var(--muted); max-width:42ch; margin:0 0 2rem;
   }
-  .hero-actions{ display:flex; gap:14px; flex-wrap:wrap; }
+  .hero-actions{ display:flex; gap:10px; flex-wrap:nowrap; }
+  .hero-actions .btn{ padding:.7em 1.05em; font-size:.9rem; white-space:nowrap; }
 
   .btn{
     font-family:var(--body); font-weight:600; font-size:.97rem;
@@ -177,6 +178,12 @@
 
   :focus-visible{ outline:2px solid var(--indigo); outline-offset:2px; }
 
+  /* ---------- INSTAGRAM ---------- */
+  .ig-grid{ display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:20px; align-items:start; }
+  .ig-grid .instagram-media{ margin:0 !important; min-width:0 !important; width:100% !important; }
+  .ig-empty{ color:var(--muted); text-align:center; grid-column:1 / -1; padding:18px 0; }
+  .ig-empty a{ color:var(--indigo); }
+
   /* ---------- FOOTER ---------- */
   footer{ padding:48px 0 64px; border-top:1px solid var(--line); color:var(--muted); font-size:.9rem; }
   footer .wrap{ display:flex; justify-content:space-between; gap:18px; flex-wrap:wrap; }
@@ -186,6 +193,7 @@
   /* ---------- RESPONSIVE ---------- */
   @media (max-width:860px){
     .hero{ grid-template-columns:1fr; min-height:auto; padding:48px 0 32px; gap:36px; }
+    .hero-actions{ flex-wrap:wrap; }
     .breath{ order:-1; max-width:240px; }
     .rsvp-grid{ grid-template-columns:1fr; gap:28px; }
     .class-row{ grid-template-columns:64px 1fr; row-gap:14px; }
@@ -199,11 +207,12 @@
   <header class="hero wrap">
     <div class="hero-copy">
       <span class="eyebrow">Weekly practice · hillaigovreen.com</span>
-      <h1>Move slow.<br><em>Breathe</em> deep.</h1>
-      <p class="lede">Weekly yoga with Hillai — open to every body. See what's coming up and reserve your mat below.</p>
+      <h1>Yoga made for <em>everyone</em>.</h1>
+      <p class="lede">Weekly yoga with Hillai - open to all levels. See what's coming up and reserve your mat below.</p>
       <div class="hero-actions">
         <a href="#classes" class="btn">See upcoming classes</a>
         <a href="#rsvp" class="btn ghost">Reserve your mat</a>
+        <a href="mailto:hillai@govreensegal.com?subject=Private%20lesson%20inquiry&body=Hi%20Hillai%2C%0A%0AI%27d%20like%20to%20book%20a%20private%20yoga%20lesson.%20Here%27s%20a%20bit%20about%20me%20and%20what%20I%27m%20looking%20for%3A%0A%0A" class="btn ghost">Book a private lesson</a>
       </div>
     </div>
     <div class="breath" aria-hidden="true">
@@ -230,6 +239,21 @@
     </div>
   </section>
 
+  <section class="block" id="instagram">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <span class="eyebrow">On Instagram</span>
+          <h2>From the mat</h2>
+        </div>
+        <a href="https://www.instagram.com/hillaignment/" target="_blank" rel="noopener" class="btn ghost">Follow @hillaignment</a>
+      </div>
+      <div class="ig-grid" id="ig-grid">
+        <p class="ig-empty" id="ig-empty">Photos from <a href="https://www.instagram.com/hillaignment/" target="_blank" rel="noopener">@hillaignment</a> will appear here once posts are added.</p>
+      </div>
+    </div>
+  </section>
+
   <section class="block" id="rsvp">
     <div class="wrap">
       <div class="rsvp-grid">
@@ -239,28 +263,30 @@
           <p>Pick a class, leave your details, and you're on the list. Space is limited, so reserving ahead helps me set out the right number of mats.</p>
         </div>
 
-        <form id="rsvp-form" novalidate>
+        <form id="rsvp-form"
+              action="https://docs.google.com/forms/d/e/1FAIpQLSfnLlSQQLOOtPfRDw-hX_azeuygXhiIzOgKSpfXvydyur9qKQ/formResponse"
+              method="POST" target="gformTarget">
           <div class="field">
             <label for="f-name">Your name</label>
-            <input id="f-name" name="name" type="text" autocomplete="name" required>
+            <input id="f-name" name="entry.1498135098" type="text" autocomplete="name" required>
           </div>
           <div class="field">
             <label for="f-email">Email</label>
-            <input id="f-email" name="email" type="email" autocomplete="email" required>
+            <input id="f-email" name="entry.1922240229" type="email" autocomplete="email" required>
           </div>
           <div class="field">
             <label for="f-class">Class</label>
-            <select id="f-class" name="class" required>
+            <select id="f-class" name="entry.309943260" required>
               <option value="" disabled selected>Choose a class…</option>
             </select>
           </div>
           <div class="field">
             <label for="f-injuries">Do you have any injuries I should know about? <span style="text-transform:none;letter-spacing:0;font-weight:400;">(optional)</span></label>
-            <input id="f-injuries" name="injuries" type="text" placeholder="A sore shoulder, a recent surgery…">
+            <input id="f-injuries" name="entry.2606285" type="text" placeholder="A sore shoulder, a recent surgery…">
           </div>
           <div class="field">
             <label for="f-mat">Do you need a mat?</label>
-            <select id="f-mat" name="mat">
+            <select id="f-mat" name="entry.1623105728">
               <option value="" selected>No preference</option>
               <option value="Yes">Yes</option>
               <option value="No">No</option>
@@ -274,6 +300,8 @@
       </div>
     </div>
   </section>
+
+  <iframe id="gformTarget" name="gformTarget" style="display:none" title="RSVP submission target" aria-hidden="true"></iframe>
 
   <footer>
     <div class="wrap">
@@ -306,6 +334,27 @@ const CONFIG = {
     mat:      "entry.1623105728"   // value must be exactly "Yes" or "No"
   },
 
+  // Instagram gallery: paste the URLs of the posts you want shown, e.g.
+  // "https://www.instagram.com/p/ABC123/". They appear in the order listed.
+  // Leave empty to show just the "Follow" button.
+  // --- Instagram, option A: auto-updating feed (recommended) ---
+  // Make a free widget at lightwidget.com (or snapwidget.com / behold.so),
+  // connect your account, and paste its full embed code between the
+  // backticks below. When this is set, it REPLACES the hand-picked posts
+  // and shows your latest posts automatically. Leave blank to use option B.
+  IG_EMBED_HTML: ``,
+
+  // --- Instagram, option B: hand-picked posts ---
+  // Used only when IG_EMBED_HTML above is blank. Paste post URLs to feature.
+  IG_POSTS: [
+    "https://www.instagram.com/p/DaAnpmPgm93/",
+    "https://www.instagram.com/p/DaDQDByRJ9K/",
+    "https://www.instagram.com/p/DZn-qvKMJpX/",
+    "https://www.instagram.com/p/DZsZUmpgshX/",
+    "https://www.instagram.com/p/DZ-_15mgonv/",
+    "https://www.instagram.com/p/DZxWLKFAcag/",
+  ],
+
   MAX_RESULTS: 8
 };
 /* ================================================================ */
@@ -326,7 +375,7 @@ function fmtTime(start, ev){
   const s = start.date.toLocaleTimeString([], opts);
   if (ev.end && ev.end.dateTime){
     const e = new Date(ev.end.dateTime).toLocaleTimeString([], opts);
-    return s + " – " + e;
+    return s + " - " + e;
   }
   return s;
 }
@@ -368,7 +417,7 @@ function renderEvents(events, { sample=false }={}){
   selectEl.innerHTML = '<option value="" disabled selected>Choose a class…</option>';
   events.forEach((ev, i) => {
     const start = parseStart(ev);
-    const label = `${(ev.summary||"Yoga class")} — ${start.date.toLocaleDateString([], {weekday:"short", month:"short", day:"numeric"})}`;
+    const label = `${(ev.summary||"Yoga class")} - ${start.date.toLocaleDateString([], {weekday:"short", month:"short", day:"numeric"})}`;
     const opt = document.createElement("option");
     opt.value = label; opt.dataset.i = i; opt.textContent = label;
     selectEl.appendChild(opt);
@@ -433,76 +482,91 @@ async function loadCalendar(){
   }
 }
 
-/* ---- RSVP submit ---- */
+/* ---- RSVP submit ----
+   The form posts NATIVELY to Google (its action/target are set in the
+   markup, field names are the entry IDs). We don't intercept the post —
+   we only react to it: show progress, and confirm when Google's reply
+   makes the hidden frame fire 'load'. This mirrors the working test page. */
 const form = document.getElementById("rsvp-form");
 const msg  = document.getElementById("form-msg");
 const submitBtn = document.getElementById("submit-btn");
+const gframe = document.getElementById("gformTarget");
 
-// Hidden frame that catches Google's response (created once).
-const gframe = document.createElement("iframe");
-gframe.name = "gformTarget";
-gframe.style.display = "none";
-document.body.appendChild(gframe);
+let submitting = false;
 
-form.addEventListener("submit", (e) => {
-  e.preventDefault();
-  msg.className = "form-msg"; msg.textContent = "";
+form.addEventListener("submit", () => {
+  submitting = true;
+  // Don't post empty optional answers — a blank value can trip Google's
+  // validation (disabled controls aren't included in the submission).
+  const inj = document.getElementById("f-injuries");
+  const mat = document.getElementById("f-mat");
+  inj.disabled = !inj.value.trim();
+  mat.disabled = !mat.value;
+  // Diagnostic: log exactly what's being sent to Google.
+  console.log("RSVP payload →", JSON.stringify([...new FormData(form).entries()]));
+  // Defer the button change: disabling the submit button *during* submit
+  // can cancel the post in some browsers.
+  setTimeout(() => {
+    msg.className = "form-msg"; msg.textContent = "";
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Reserving…";
+  }, 0);
+});
 
-  const data = {
-    name:     document.getElementById("f-name").value.trim(),
-    email:    document.getElementById("f-email").value.trim(),
-    class:    document.getElementById("f-class").value,
-    injuries: document.getElementById("f-injuries").value.trim(),
-    mat:      document.getElementById("f-mat").value
-  };
-  if (!data.name || !data.email || !data.class){
-    msg.className = "form-msg err";
-    msg.textContent = "Please add your name, email, and a class.";
-    return;
-  }
-
-  // Build a throwaway form that posts to Google, aimed at the hidden frame.
-  // This native form-to-frame post is what reliably reaches Google Forms
-  // (a background fetch can be blocked by the browser; this isn't).
-  const gf = document.createElement("form");
-  gf.action = CONFIG.GOOGLE_FORM_ACTION;
-  gf.method = "POST";
-  gf.target = "gformTarget";
-  gf.style.display = "none";
-  const add = (name, value) => {
-    if (!name || value == null || value === "") return;
-    const inp = document.createElement("input");
-    inp.type = "hidden"; inp.name = name; inp.value = value;
-    gf.appendChild(inp);
-  };
-  add(CONFIG.FORM_ENTRIES.name,     data.name);
-  add(CONFIG.FORM_ENTRIES.email,    data.email);
-  add(CONFIG.FORM_ENTRIES.class,    data.class);
-  add(CONFIG.FORM_ENTRIES.injuries, data.injuries);
-  add(CONFIG.FORM_ENTRIES.mat,      data.mat);
-  document.body.appendChild(gf);
-
-  submitBtn.disabled = true; submitBtn.textContent = "Reserving…";
-
-  let done = false;
-  const finish = () => {
-    if (done) return; done = true;
-    gframe.removeEventListener("load", finish);
-    form.reset();
-    msg.className = "form-msg ok";
-    msg.textContent = "Reserved. See you on the mat.";
-    submitBtn.disabled = false; submitBtn.textContent = "Reserve my mat";
-    gf.remove();
-  };
-  // Google's reply makes the hidden frame fire 'load' — that's our confirm.
-  gframe.addEventListener("load", finish);
-  gf.submit();
-  // Safety net in case the load event doesn't fire.
-  setTimeout(finish, 4000);
+// The frame loads once at startup (about:blank) — ignore that. After a
+// submit, Google's response loads into it and we confirm.
+gframe.addEventListener("load", () => {
+  // Re-enable any optional fields we disabled for the submission.
+  document.getElementById("f-injuries").disabled = false;
+  document.getElementById("f-mat").disabled = false;
+  if (!submitting) return;
+  submitting = false;
+  form.reset();
+  selectEl.selectedIndex = 0;
+  msg.className = "form-msg ok";
+  msg.textContent = "Reserved. See you on the mat.";
+  submitBtn.disabled = false; submitBtn.textContent = "Reserve my mat";
 });
 
 loadCalendar();
 
+/* ---- Instagram gallery ---- */
+function renderInstagram(){
+  const grid = document.getElementById("ig-grid");
+
+  // Option A: an auto-updating widget embed takes priority.
+  if (CONFIG.IG_EMBED_HTML && CONFIG.IG_EMBED_HTML.trim()){
+    grid.style.display = "block";          // let the widget span full width
+    grid.innerHTML = CONFIG.IG_EMBED_HTML;
+    // Re-create any <script> tags so the widget actually runs.
+    grid.querySelectorAll("script").forEach(old => {
+      const s = document.createElement("script");
+      [...old.attributes].forEach(a => s.setAttribute(a.name, a.value));
+      s.textContent = old.textContent;
+      old.replaceWith(s);
+    });
+    return;
+  }
+
+  // Option B: hand-picked posts via Instagram's official embed.
+  const posts = (CONFIG.IG_POSTS || []).filter(Boolean);
+  if (!posts.length) return;                 // keep the "Follow" prompt
+  const empty = document.getElementById("ig-empty");
+  if (empty) empty.remove();
+  posts.forEach(url => {
+    const bq = document.createElement("blockquote");
+    bq.className = "instagram-media";
+    bq.setAttribute("data-instgrm-permalink", url);
+    bq.setAttribute("data-instgrm-version", "14");
+    grid.appendChild(bq);
+  });
+  // If Instagram's script is already loaded, process now; otherwise it will
+  // pick up these blockquotes automatically when it finishes loading.
+  if (window.instgrm && window.instgrm.Embeds) window.instgrm.Embeds.process();
+}
+renderInstagram();
+
 </script>
+<script async src="https://www.instagram.com/embed.js"></script>
 </body>
 </html>
