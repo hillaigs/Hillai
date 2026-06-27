@@ -438,16 +438,22 @@ const form = document.getElementById("rsvp-form");
 const msg  = document.getElementById("form-msg");
 const submitBtn = document.getElementById("submit-btn");
 
-form.addEventListener("submit", async (e) => {
+// Hidden frame that catches Google's response (created once).
+const gframe = document.createElement("iframe");
+gframe.name = "gformTarget";
+gframe.style.display = "none";
+document.body.appendChild(gframe);
+
+form.addEventListener("submit", (e) => {
   e.preventDefault();
   msg.className = "form-msg"; msg.textContent = "";
 
   const data = {
-    name:     form.name.value.trim(),
-    email:    form.email.value.trim(),
-    class:    form.class.value,
-    injuries: form.injuries.value.trim(),
-    mat:      form.mat.value
+    name:     document.getElementById("f-name").value.trim(),
+    email:    document.getElementById("f-email").value.trim(),
+    class:    document.getElementById("f-class").value,
+    injuries: document.getElementById("f-injuries").value.trim(),
+    mat:      document.getElementById("f-mat").value
   };
   if (!data.name || !data.email || !data.class){
     msg.className = "form-msg err";
@@ -455,36 +461,48 @@ form.addEventListener("submit", async (e) => {
     return;
   }
 
-  // Build the Google Form payload from the entry IDs.
-  const params = new URLSearchParams();
-  params.append(CONFIG.FORM_ENTRIES.name,  data.name);
-  params.append(CONFIG.FORM_ENTRIES.email, data.email);
-  params.append(CONFIG.FORM_ENTRIES.class, data.class);
-  if (data.injuries) params.append(CONFIG.FORM_ENTRIES.injuries, data.injuries);
-  if (data.mat)      params.append(CONFIG.FORM_ENTRIES.mat, data.mat);
+  // Build a throwaway form that posts to Google, aimed at the hidden frame.
+  // This native form-to-frame post is what reliably reaches Google Forms
+  // (a background fetch can be blocked by the browser; this isn't).
+  const gf = document.createElement("form");
+  gf.action = CONFIG.GOOGLE_FORM_ACTION;
+  gf.method = "POST";
+  gf.target = "gformTarget";
+  gf.style.display = "none";
+  const add = (name, value) => {
+    if (!name || value == null || value === "") return;
+    const inp = document.createElement("input");
+    inp.type = "hidden"; inp.name = name; inp.value = value;
+    gf.appendChild(inp);
+  };
+  add(CONFIG.FORM_ENTRIES.name,     data.name);
+  add(CONFIG.FORM_ENTRIES.email,    data.email);
+  add(CONFIG.FORM_ENTRIES.class,    data.class);
+  add(CONFIG.FORM_ENTRIES.injuries, data.injuries);
+  add(CONFIG.FORM_ENTRIES.mat,      data.mat);
+  document.body.appendChild(gf);
 
   submitBtn.disabled = true; submitBtn.textContent = "Reserving…";
-  try{
-    // Google Forms doesn't allow cross-origin reads, so this is a
-    // fire-and-forget post: the response is opaque, but the row still
-    // lands in your Sheet. We confirm optimistically.
-    await fetch(CONFIG.GOOGLE_FORM_ACTION, {
-      method: "POST",
-      mode: "no-cors",
-      body: params
-    });
+
+  let done = false;
+  const finish = () => {
+    if (done) return; done = true;
+    gframe.removeEventListener("load", finish);
     form.reset();
     msg.className = "form-msg ok";
     msg.textContent = "Reserved. See you on the mat.";
-  }catch(err){
-    msg.className = "form-msg err";
-    msg.textContent = "That didn't go through — check your connection and try again.";
-  }finally{
     submitBtn.disabled = false; submitBtn.textContent = "Reserve my mat";
-  }
+    gf.remove();
+  };
+  // Google's reply makes the hidden frame fire 'load' — that's our confirm.
+  gframe.addEventListener("load", finish);
+  gf.submit();
+  // Safety net in case the load event doesn't fire.
+  setTimeout(finish, 4000);
 });
 
 loadCalendar();
+
 </script>
 </body>
 </html>
